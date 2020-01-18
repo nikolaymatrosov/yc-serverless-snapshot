@@ -1,0 +1,21 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "~2.600.0"
+  },
+  "devDependencies": {
+    "yandex-cloud": "~1.1.1",
+    "@types/node": "^13.1.6",
+    "typescript": "^3.7.4",
+    "env-cmd": "^10.0.1"
+  },
+  "scripts": {
+    "create": "env-cmd scripts/create.sh",
+    "deploy": "env-cmd scripts/deploy.sh"
+  }
+}
