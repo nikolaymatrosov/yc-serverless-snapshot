@@ -18,7 +18,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
-    - run: npm install --only=dev
-    - run: npx ts build
-      env:
-        CI: true
+    - run: npx tsc --build tsconfig.json
