@@ -6,13 +6,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "~2.600.0"
+    "aws-sdk": "^2.625.0"
   },
   "devDependencies": {
-    "yandex-cloud": "~1.1.1",
     "@types/node": "^13.1.6",
+    "env-cmd": "^10.0.1",
     "typescript": "^3.7.4",
-    "env-cmd": "^10.0.1"
+    "yandex-cloud": "^1.2.2"
   },
   "scripts": {
     "create": "env-cmd scripts/create.sh",
