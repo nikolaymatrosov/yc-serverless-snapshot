@@ -1,4 +1,4 @@
-##UPD 2022-01-06
+## UPD 2022-01-06
 Пример переписан с использованием нового Nodejs SDK v2 для Yandex Cloud.
 
 Альтернативная реализация на Go. https://github.com/nikolaymatrosov/go-yc-serverless-snapshot
