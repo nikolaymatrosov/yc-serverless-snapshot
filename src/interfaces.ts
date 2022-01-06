@@ -1,4 +1,5 @@
 export interface CreateSnapshotParams {
-    folderId: string,
-    diskId: string
+    folderId: string;
+    diskId: string;
+    diskName: string;
 }

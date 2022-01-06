@@ -1,8 +1,10 @@
-import {SnapshotService} from "yandex-cloud/api/compute/v1";
+import {cloudApi, serviceClients, Session} from "yandex-cloud";
 import {now} from "./time";
 
 // Cloud id where snapshots will be created.
 const FOLDER_ID = process.env.FOLDER_ID;
+
+const {compute: {snapshot_service: {ListSnapshotsRequest, DeleteSnapshotRequest}}} = cloudApi;
 
 /**
  * Cron-function that deletes snapshots that have `expiration_ts` label if it's value is less than
@@ -13,22 +15,29 @@ const FOLDER_ID = process.env.FOLDER_ID;
  *
  * @return {Promise<Object>} response to be serialized as JSON.
  */
-export async function handler(event, context) {
-    const snapshotService = new SnapshotService();
+export async function handler(event: any, context: any) {
+    const session = new Session();
+    const snapshotClient = session.client(serviceClients.SnapshotServiceClient);
 
-    const {snapshots} = await snapshotService.list({folderId: FOLDER_ID});
-
-    const operations = [];
-    for (const snapshot of snapshots) {
-        const {expiration_ts} = snapshot.labels;
-        if (expiration_ts && now() > parseInt(expiration_ts)) {
-            operations.push(snapshotService.delete({snapshotId: snapshot.id}));
+    const snapshotsListResponse = await snapshotClient.list(ListSnapshotsRequest.fromPartial({folderId: FOLDER_ID}));
+    let {snapshots, nextPageToken} = snapshotsListResponse;
+    while (snapshots.length > 0) {
+        for (const snapshot of snapshots) {
+            const {expiration_ts} = snapshot.labels;
+            if (expiration_ts && now() > parseInt(expiration_ts, 10)) {
+                snapshotClient.delete(DeleteSnapshotRequest.fromPartial({snapshotId: snapshot.id}));
+            }
+        }
+        if (nextPageToken) {
+            const snapshotsListResponse = await snapshotClient.list(
+                ListSnapshotsRequest.fromPartial({
+                    folderId: FOLDER_ID,
+                    pageToken: nextPageToken
+                }));
+            snapshots = snapshotsListResponse.snapshots;
+            nextPageToken = snapshotsListResponse.nextPageToken;
+        } else {
+            break;
         }
     }
-    const results = await Promise.all(operations);
-    const errors = results.map(op => op.error).filter(x => x !== undefined && x !== null);
-    if (errors.length) {
-        throw Error(JSON.stringify(errors));
-    }
-    return results
 }

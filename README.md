@@ -1,5 +1,7 @@
-# Рекомендуется использовать вариант на Go.
-https://github.com/nikolaymatrosov/go-yc-serverless-snapshot
+##UPD 2022-01-06
+Пример переписан с использованием нового Nodejs SDK v2 для Yandex Cloud.
+
+Альтернативная реализация на Go. https://github.com/nikolaymatrosov/go-yc-serverless-snapshot
 
 ### Принцип работы
 В облаке существует лимит на количество одновременно запущенных в облаке операций. По умолчанию он равен 15.
@@ -28,15 +30,13 @@ https://github.com/nikolaymatrosov/go-yc-serverless-snapshot
 
 Чтобы задеплоить функции в ваше облако выполните:
 1. Создать файл `.env` из шаблона из `.env.template` и заполнить
-1. `npm install`
-1. `npm run create` создаст все необходимые объекты в облаке: 3 функции, очередь сообщений и 3 триггера.
-1. `npm run deploy`
+2. `npm install`
+3. `npm run create` создаст все необходимые объекты в облаке: 3 функции, очередь сообщений и 3 триггера.
+Запуск срипта идемпотентен и не переписывает уже существующие сущнотсти.
+4. `npm run deploy`
 
 #### Windows
 
 Deploy script можно запустить в mingw (git bash).
-Для его корректной работы вам может понадобиться
-1. Скачать и установить [GnuZip](http://gnuwin32.sourceforge.net/packages/zip.htm)
-1. Прописать `GnuZip` в path.
 
 Возможно потребуются права администаратора.

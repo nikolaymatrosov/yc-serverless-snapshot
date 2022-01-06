@@ -1,11 +1,14 @@
-import {SnapshotService} from "yandex-cloud/api/compute/v1";
+import {cloudApi, serviceClients, Session} from "yandex-cloud";
 import {CreateSnapshotParams} from "./interfaces";
-import {now} from "./time";
 import {MessageQueueEvent} from "./MessageQueueEvent";
+import {now} from "./time";
 
 // TTL for snapshot. Other function will delete expired snapshot that have `expiration_ts` gt now.
-const TTL = process.env.TTL;
+// Default 1 day
+const TTL = process.env.TTL ?? "86400";
 
+
+const {compute: {snapshot_service: {CreateSnapshotRequest}}} = cloudApi;
 
 /**
  * Entry-point function.
@@ -15,21 +18,35 @@ const TTL = process.env.TTL;
  *
  * @return {Promise<Object>} response to be serialized as JSON.
  */
-export async function handler(event: MessageQueueEvent, context) {
-    const snapshotService = new SnapshotService();
-    const expiration_ts = String(now() + parseInt(TTL));
-    console.log(JSON.stringify(event));
+export async function handler(event: MessageQueueEvent, context: any) {
+    const session = new Session();
+    const snapshotClient = session.client(serviceClients.SnapshotServiceClient);
+
+    const expirationTs = String(now() + parseInt(TTL, 10));
+
     const {details: {message: {body}}} = event.messages[0];
 
-    const {folderId, diskId} = JSON.parse(body) as CreateSnapshotParams;
+    const {folderId, diskId, diskName} = JSON.parse(body) as CreateSnapshotParams;
 
-    const operation = await snapshotService.create({
-        folderId,
-        diskId,
-        labels: {
-            expiration_ts
-        }
-    });
+    // Генерируем Name для снепшота
+    // Значение не может быть длиннее 63 символов
+    const name = `snapshot-${expirationTs}-${diskName}`.slice(0, 63);
+
+    // Генерируем Description для снепшота
+    const date = new Date(parseInt(expirationTs, 10) * 1000);
+    const description = `Expiration:  ${date.toISOString()}`
+
+    const operation = await snapshotClient.create(
+        CreateSnapshotRequest.fromPartial({
+            folderId,
+            diskId,
+            name,
+            description,
+            labels: {
+                expiration_ts: expirationTs
+            }
+        })
+    );
 
     if (operation.error) {
         throw Error(operation.error?.message);
