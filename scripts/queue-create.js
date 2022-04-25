@@ -32,7 +32,7 @@ class Config {
         const newRecord = `${name}=${value}\n`;
         if (this.data.match(RegExp(`${name}=.*\n`, 'g'))) {
             this.data = this.data.replace(
-                RegExp(`/${name}=.*\n`, 'g'),
+                RegExp(`${name}=.*\n`, 'g'),
                 newRecord
             )
         } else {
