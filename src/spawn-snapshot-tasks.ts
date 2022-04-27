@@ -1,7 +1,7 @@
 import * as AWS from "aws-sdk";
 import {SQS} from "aws-sdk";
 import {AWSError} from "aws-sdk/lib/error";
-import {cloudApi, serviceClients, Session} from "yandex-cloud";
+import {cloudApi, serviceClients, Session} from "@yandex-cloud/nodejs-sdk";
 
 import {CreateSnapshotParams} from "./interfaces";
 

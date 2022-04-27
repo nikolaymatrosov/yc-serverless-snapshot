@@ -1,4 +1,4 @@
-import {cloudApi, serviceClients, Session} from "yandex-cloud";
+import {cloudApi, serviceClients, Session} from "@yandex-cloud/nodejs-sdk";
 import {now} from "./time";
 
 // Cloud id where snapshots will be created.

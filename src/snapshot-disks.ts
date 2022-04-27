@@ -1,4 +1,4 @@
-import {cloudApi, serviceClients, Session} from "yandex-cloud";
+import {cloudApi, serviceClients, Session} from "@yandex-cloud/nodejs-sdk";
 import {CreateSnapshotParams} from "./interfaces";
 import {MessageQueueEvent} from "./MessageQueueEvent";
 import {now} from "./time";
