@@ -30,7 +30,8 @@ export async function handler(event: MessageQueueEvent, context: any) {
 
     // Генерируем Name для снепшота
     // Значение не может быть длиннее 63 символов
-    const name = `snapshot-${expirationTs}-${diskName}`.slice(0, 63);
+    const name = `snapshot-${expirationTs}-${diskName || diskId}`.slice(0, 63);
+    console.log(name)
 
     // Генерируем Description для снепшота
     const date = new Date(parseInt(expirationTs, 10) * 1000);
