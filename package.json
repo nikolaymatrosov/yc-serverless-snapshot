@@ -10,7 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1051.0",
+    "aws-sdk": "^2.1354.0",
     "@yandex-cloud/nodejs-sdk": "2.3.1"
   },
   "devDependencies": {
